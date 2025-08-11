@@ -14,7 +14,7 @@ Environment Variables
   - `RAGNAR_SERVER`: Server to connect to (can be a host alias from
     `~/.ssh/config`). Defaults to `localhost`.
   - `RAGNAR_NBDEXPORT`: Name of remote NBD export (see remote
-    `/etc/nbd-server/config`). Defaults to `ragnar`.
+    `/etc/nbd-server/config`). Defaults to `ztar`.
   - `RAGNAR_KEYFILE`: Path to LUKS keyfile. Defaults to
     `/etc/luks/${RAGNAR_NBDEXPORT}.key`
 

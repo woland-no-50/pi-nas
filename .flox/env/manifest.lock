@@ -1,0 +1,13 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "vars": {
+      "RAGNAR_SERVER": "ztar"
+    },
+    "hook": {},
+    "profile": {},
+    "options": {}
+  },
+  "packages": []
+}
