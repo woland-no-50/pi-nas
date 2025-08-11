@@ -17,6 +17,8 @@ version = 1
 [install]
 # gum.pkg-path = "gum"
 # gum.version = "^0.14.5"
+udisks.pkg-path = "udisks"
+udisks.systems = ["aarch64-linux", "x86_64-linux"]
 
 
 ## Environment Variables ---------------------------------------------

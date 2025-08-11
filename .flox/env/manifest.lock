@@ -2,6 +2,15 @@
   "lockfile-version": 1,
   "manifest": {
     "version": 1,
+    "install": {
+      "udisks": {
+        "pkg-path": "udisks",
+        "systems": [
+          "aarch64-linux",
+          "x86_64-linux"
+        ]
+      }
+    },
     "vars": {
       "RAGNAR_SERVER": "ztar"
     },
@@ -9,5 +18,72 @@
     "profile": {},
     "options": {}
   },
-  "packages": []
+  "packages": [
+    {
+      "attr_path": "udisks",
+      "broken": false,
+      "derivation": "/nix/store/xiinf5grdk033ks51g7kndd22ywwaycj-udisks-2.10.1.drv",
+      "description": "Daemon, tools and libraries to access and manipulate disks, storage devices and technologies",
+      "install_id": "udisks",
+      "license": "[ LGPL-2.0-or-later, GPL-2.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "udisks-2.10.1",
+      "pname": "udisks",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T00:50:47.725522Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.10.1",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/7by7qp22rs90q7hcchr7ann5i6jybrym-udisks-2.10.1-dev",
+        "devdoc": "/nix/store/sipj4h64vqc6ai18khw6vmhcq0zi8ld5-udisks-2.10.1-devdoc",
+        "man": "/nix/store/4yqy3kd3cp2ik733418bka96lbdi1y35-udisks-2.10.1-man",
+        "out": "/nix/store/wdqkjc2z89yrjqgrmh90bzk0r7r01af3-udisks-2.10.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "udisks",
+      "broken": false,
+      "derivation": "/nix/store/qv0ghdzmpzhkm2qlwd6hgkh6znvl5fwv-udisks-2.10.1.drv",
+      "description": "Daemon, tools and libraries to access and manipulate disks, storage devices and technologies",
+      "install_id": "udisks",
+      "license": "[ LGPL-2.0-or-later, GPL-2.0-or-later ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "udisks-2.10.1",
+      "pname": "udisks",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T01:34:34.667732Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.10.1",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/bqg7qpbv06rip4ls8zgq5is1fz0lrfv4-udisks-2.10.1-dev",
+        "devdoc": "/nix/store/xfjay4j3n5db1wxn7s5a7zvf086d0s79-udisks-2.10.1-devdoc",
+        "man": "/nix/store/5y15wm3zq1c2hsrak1kl9zr3f8bcvn5i-udisks-2.10.1-man",
+        "out": "/nix/store/cfj4h43l3sisq3bdhmkk4c374f4yiic5-udisks-2.10.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
 }

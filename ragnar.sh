@@ -8,7 +8,8 @@
 # https://github.com/gavinhungry/ragnar
 #
 #
-#set -x
+
+set -x
 
 [ ${_ABASH:-0} -ne 0 ] || source $(dirname "${BASH_SOURCE}")/abash/abash.sh
 
@@ -53,7 +54,11 @@ nbd_is_open() {
 }
 
 nbd_next_open() {
+  IDX=$1
   checksu modprobe nbd
+
+  echo "nbd${IDX}"
+  return
 
   for DEV in /dev/nbd*; do
     NBD=$(echo ${DEV} | cut -d'/' -f3)
@@ -65,7 +70,7 @@ nbd_next_open() {
 }
 
 export_is_open() {
-  IDX=${1}
+  IDX=$1
   [ -f "${TMP}/${IDX}/nbd" ] || return 1
   nbd_is_open $(nbd_device ${IDX})
 }
@@ -102,7 +107,7 @@ luks_open() {
   NBD=$1
   IDX=$2
   #checksu [ -f ${HEADER} ] || HEADER=${NBD}
-  checksu cryptsetup open /dev/${NBD} ${NBDEXPORT}${IDX} --key-file ${KEYFILE} # --header ${HEADER}
+  checksu cryptsetup open /dev/${NBD} ${NBDEXPORT}${IDX} --key-file /tmp/keyfile # ${KEYFILE} # --header ${HEADER}
 }
 
 luks_close() {
@@ -143,39 +148,48 @@ open() {
     ssh_is_open || open_ssh || die "Could not open SSH connection to ${SERVER}"
     sleep 1
 
-    NBD=$(nbd_next_open)
+    NBD=$(nbd_next_open ${i})
     inform "Opening network block device on /dev/${NBD}"
     open_export ${NBD} ${i} || die "Could not open network block device on /dev/${NBD}"
+    sleep 1
 
     inform "Opening LUKS device from /dev/${NBD}"
     luks_open ${NBD} ${i} || die "Could not open LUKS device from /dev/${NBD}"
+    sleep 1
 
-    inform "Mounting filesystem from /dev/mapper/${NBDEXPORT}${i}"
-    mount_filesystem ${i} || die "Could not mount filesystem from /dev/mapper/${NBDEXPORT}${i}"
+    inform "Decrypted filesystem from /dev/mapper/${NBDEXPORT}${i}"
+    #mount_filesystem ${i} || die "Could not mount filesystem from /dev/mapper/${NBDEXPORT}${i}"
 
     msg "Filesystem is mounted on $(filesystem_mountpoint)"
+    sleep 1
   done
+  checksu zpool import -f ${NBDEXPORT}
+  inform "Mounted zpool ${NBDEXPORT}"
 }
 
 close() {
   # TODO HARDCODED
   for i in {0..4}; do
-    export_is_open $i || die "${NBDEXPORT}${i} is not open"
+    checksu zpool export ${NBDEXPORT}
+    if [[ -n "$(export_is_open ${i})" ]]; then
+      inform "${NBDEXPORT}${i} is not open"
+      continue # skip
+    fi
     NBD=$(nbd_device ${i})
 
     checksu
 
     MOUNTPOINT=$(filesystem_mountpoint ${i})
 
-    filesystem_is_mounted ${i} && inform "Closing filesystem on ${MOUNTPOINT}"
-    unmount_filesystem ${i} || die "Could not close filesystem on ${MOUNTPOINT}"
+    #filesystem_is_mounted ${i} && inform "Closing filesystem on ${MOUNTPOINT}"
+    #unmount_filesystem ${i} || die "Could not close filesystem on ${MOUNTPOINT}"
 
     luks_is_open ${i} && inform "Closing LUKS device from /dev/${NBD}"
     luks_close ${i} || die "Could not close LUKS device from /dev/${NBD}"
 
     export_is_open ${i} && inform "Closing network block device on /dev/${NBD}"
     close_export ${i} || die "Could not close network block device on /dev/${NBD}"
-
+    sleep 1
   done
   ssh_is_open && inform "Closing SSH connection to ${SERVER}"
   close_ssh || die "Could not close existing SSH connection to ${SERVER}"
