@@ -9,7 +9,7 @@
 #
 #
 
-set -x
+#set -x
 
 [ ${_ABASH:-0} -ne 0 ] || source $(dirname "${BASH_SOURCE}")/abash/abash.sh
 
@@ -107,7 +107,7 @@ luks_open() {
   NBD=$1
   IDX=$2
   #checksu [ -f ${HEADER} ] || HEADER=${NBD}
-  checksu cryptsetup open /dev/${NBD} ${NBDEXPORT}${IDX} --key-file /tmp/keyfile # ${KEYFILE} # --header ${HEADER}
+  checksu cryptsetup open /dev/${NBD} ${NBDEXPORT}${IDX} --key-file ${KEYFILE} # --header ${HEADER}
 }
 
 luks_close() {
@@ -146,22 +146,18 @@ open() {
 
     inform "Opening SSH connection to ${SERVER}"
     ssh_is_open || open_ssh || die "Could not open SSH connection to ${SERVER}"
-    sleep 1
 
     NBD=$(nbd_next_open ${i})
     inform "Opening network block device on /dev/${NBD}"
     open_export ${NBD} ${i} || die "Could not open network block device on /dev/${NBD}"
-    sleep 1
+    sleep 3
 
     inform "Opening LUKS device from /dev/${NBD}"
     luks_open ${NBD} ${i} || die "Could not open LUKS device from /dev/${NBD}"
-    sleep 1
-
     inform "Decrypted filesystem from /dev/mapper/${NBDEXPORT}${i}"
-    #mount_filesystem ${i} || die "Could not mount filesystem from /dev/mapper/${NBDEXPORT}${i}"
 
     msg "Filesystem is mounted on $(filesystem_mountpoint)"
-    sleep 1
+    sleep 0.5
   done
   checksu zpool import -f ${NBDEXPORT}
   inform "Mounted zpool ${NBDEXPORT}"
@@ -194,7 +190,7 @@ close() {
   ssh_is_open && inform "Closing SSH connection to ${SERVER}"
   close_ssh || die "Could not close existing SSH connection to ${SERVER}"
 
-  tmpdirclean
+  rm -rf ${TMP}
 }
 
 case $1 in
