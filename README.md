@@ -9,12 +9,18 @@ You must have an existing LUKS device with a keyfile being exported by NBD on
 some remote server. Your NBD server should be behind a firewall, and only listen
 on `localhost`.
 
+MODIFICATIONS:
+    - The name of your zpool and the name of the alias (in .ssh/config) to your remote server that is
+    hosting your encrypted drives must be the same. 
+    - set that value to RAGNAR_SERVER=
+    e.g. export RAGNAR_SERVER=zigloo or RAGNAR_SERVER=ztar
+
 Environment Variables
 ---------------------
   - `RAGNAR_SERVER`: Server to connect to (can be a host alias from
-    `~/.ssh/config`). Defaults to `localhost`.
+    `~/.ssh/config`). Defaults to `ragnar`.
   - `RAGNAR_NBDEXPORT`: Name of remote NBD export (see remote
-    `/etc/nbd-server/config`). Defaults to `ztar`.
+    `/etc/nbd-server/config`). Defaults to `ragnar`.
   - `RAGNAR_KEYFILE`: Path to LUKS keyfile. Defaults to
     `/etc/luks/${RAGNAR_NBDEXPORT}.key`
 
