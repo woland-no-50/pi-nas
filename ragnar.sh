@@ -208,8 +208,8 @@ close() {
 ssh_host_exists() {
     local host=$1
     # Check if the hostname differs from the input (meaning it was configured)
-    local resolved_hostname=$(ssh -G "$host" 2>/dev/null | grep "^hostname " | cut -d' ' -f2)
-    [[ "$resolved_hostname" != "$host" ]]
+    local found_hostname=$(cat ~/.ssh/config | grep -i "^host " | tr -s " " | cut -d " " -f 2 | grep -wE "^${host}$")
+    [[ "$found_hostname" == "$host" ]]
 }
 
 # Usage
