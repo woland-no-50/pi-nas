@@ -5,15 +5,6 @@ NBD & luks = remote encrypted backups... e.g. we each have a luks encrypted setu
 
 Poc from: https://github.com/gavinhungry/ragnar + some zfs
 
-# Cloning this repo, unfortunately we are using some submodules so the command to get all the code requires is a bit different:
-```
-# to clone and update
-git clone --recurse-submodules --remote-submodules git@github.com:woland-no-50/pi-nas.git
-# If you just want to clone them at their recorded SHA1:
-git clone --recurse-submodules git@github.com:woland-no-50/pi-nas.git
-```
-
-
 # Parts
 Sd card for pi - https://www.amazon.com/dp/B09X7DQJQL?ref=ppx_yo2ov_dt_b_fed_asin_title
 Usb adapter for fans - https://www.amazon.com/dp/B081K8LBH3?ref=ppx_yo2ov_dt_b_fed_asin_title
