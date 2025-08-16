@@ -146,14 +146,19 @@ https://forum.level1techs.com/t/zfs-guide-for-starters-and-advanced-users-concep
 At this point you should have 5 unencrypted hdd’s on /dev/mapper/ if you do not use `cryptsetup open` on the encrypted drives. It’s time to create a zpool at raidz2:
 ```
 mkdir ~/backups
-zpool create -o ashift=12 -o autotrim=on -m ~/backups ztar raidz2 /dev/mapper/luks-*
+zpool create -o ashift=12 -o autotrim=on ztar raidz2 /dev/mapper/luks-*
 
 
 
-# create a root dataset
-sudo zfs create -o mountpoint=~/backups -o canmount=on ztar/root
+# create a root dataset, because of the permission hierarchy of zfs i like to have all datasets come off of a root dataset
+so I am going to create `ztar/root` and `ztar/root/backups`
+sudo zfs create -o canmount=on ztar/root
 # an initial snapshot simplifies things
 sudo zfs snapshot ztar/root@empty
+
+# optional
+# create the backups dataset that is mounted at ~/backups when the zpool is imported.
+sudo zfs create -o mountpoint=~/backups -o canmount=on ztar/root/backups/
 ```
 
 #### Host Nbd Server of Encrypted Hard Drives
@@ -216,6 +221,10 @@ ztar4
 cd ragnar
 ```
 Follow ragnar README (set RAGNAR_SERVER=ztar  in env and put the keyfile at /etc/luks/ztar.key)
+
+NOTE: You must be able to successfully run `./ragnar.sh open` and `./ragnar.sh close`
+
+save the direct path to the ragnar script, e.g. `~/development/pi-nas/ragnar/ragnar.sh`
 
 ### having a host machine "always" mount the zpool
 
