@@ -26,17 +26,17 @@ Cooler for pi
 https://www.amazon.com/dp/B0CRR97QGL?ref=ppx_yo2ov_dt_b_fed_asin_title
 
 
-# Monitoring
+# Monitoring = tbd
 https://www.openstatus.dev/
 https://www.reddit.com/r/devops/comments/14ygcmo/seeking_opinions_on_better_stack_alternatives/
 Super Monitoring, Hetrix Tools, OffAlerts, and Pingdom
 https://github.com/louislam/uptime-kuma
 
 
-# Steps manually performed:
-## Assembly!
-# 3D print pi tray
-Possible 3d caddy/tray - https://www.printables.com/model/1281459-raspberry-pi-4-bracket-for-35-drive-bay-or-univers#preview.file.NR3Av
+## Steps manually performed in the physical world.
+### Assembly!
+- you're on your own here!
+- 3D print pi tray to so it can be screwed in to the tower?
 
 
 ## Prereqs
@@ -44,6 +44,8 @@ Possible 3d caddy/tray - https://www.printables.com/model/1281459-raspberry-pi-4
 
 
 ### Overview:
+- we are going to be doing all of these operations on a computer and zpool we will call `ztar`
+- What we are going to do:
 Create a linux filesystem on each disk (for  each drive (you basically just hit g, n, enter to accept default start, enter t to accept default end, p (to check over), then w to write to disk)
 Then we do the luks thing
 Then we write zeros to the unencrypted drive (so the data on the encrypted drive starts fresh and random)
@@ -66,6 +68,7 @@ Add backports and install modules:
 $ codename=$(lsb_release -cs);echo "deb http://deb.debian.org/debian $codename-backports main contrib non-free" | sudo tee -a /etc/apt/sources.list && sudo apt update
 # apt install -t stable-backports zfsutils-linux
 ```
+
 ### FORMATTING the drives
 `sudo fdisk /dev/sdX` where X = drive letter
 ```
@@ -97,7 +100,15 @@ The partition table has been altered.
 Calling ioctl() to re-read partition table.
 Syncing disks.
 ```
+
+
 ### LUKS
+
+helpful command to get the partuuid used in our luks encryption
+```
+lsblk -o name,partuuid
+```
+
 Helpful guide part 1: https://www.lisenet.com/2013/install-luks-and-create-an-encrypted-luks-partition-on-debian/
 Helpful guide part 2: https://www.lisenet.com/2013/luks-add-keys-backup-and-restore-volume-header/
 LUKS FAQ: https://gitlab.com/cryptsetup/cryptsetup/-/blob/main/FAQ.md#frequently-asked-questions-cryptsetupluks
@@ -135,18 +146,18 @@ https://forum.level1techs.com/t/zfs-guide-for-starters-and-advanced-users-concep
 At this point you should have 5 unencrypted hdd’s on /dev/mapper/ if you do not use `cryptsetup open` on the encrypted drives. It’s time to create a zpool at raidz2:
 ```
 mkdir ~/backups
-zpool create -o ashift=12 -o autotrim=on -m ~/backups zigloo raidz2 /dev/mapper/luks-*
+zpool create -o ashift=12 -o autotrim=on -m ~/backups ztar raidz2 /dev/mapper/luks-*
 
 
 
 # create a root dataset
-sudo zfs create -o mountpoint=~/backups -o canmount=on zigloo/root
+sudo zfs create -o mountpoint=~/backups -o canmount=on ztar/root
 # an initial snapshot simplifies things
-sudo zfs snapshot zigloo/root@empty
+sudo zfs snapshot ztar/root@empty
 ```
 
-# Host Nbd Server of Encrypted Hard Drives
-	NOTE on ordering: it really matters the order the drives appear to zpool when it is created must be the order seen when it is mounted. So are cryptsetups create /dev/mapperztar0-ztar4 and our nbd client takes great care to make sure ztar0=nbd0, ztar1=nbd1, etc.
+#### Host Nbd Server of Encrypted Hard Drives
+	NOTE on ordering: it really matters the order the drives appear to zpool when it is created must be the order seen when it is mounted. So are cryptsetups create /dev/mapper/ztar0-ztar4 and our nbd client takes great care to make sure ztar0=nbd0, ztar1=nbd1, etc.
 
 
 ```
@@ -164,13 +175,9 @@ If not installed, `sudo apt install nbd-server`
 ```
 [generic]
 allowlist = 1
-# If you want to run everything as root rather than the nbd user, you
-# may either say "root" in the two following lines, or remove them
-# altogether. Do not remove the [generic] section, however.
-#user = nbd
-#group = nbd
-#includedir = /etc/nbd-server/conf.d
+authfile = /etc/nbd-server/allow
 # default port is 10809
+
 [ztar0]
 exportname = /dev/disk/by-partuuid/f0827759-bca7-5645-a409-db6454f4ae93
 [ztar1]
@@ -181,15 +188,16 @@ exportname = /dev/disk/by-partuuid/5846622e-4c50-854a-a0db-c42f8aa77b1b
 exportname = /dev/disk/by-partuuid/d1dc2a41-55a7-3b4e-bc87-f64fa01b1627
 [ztar4]
 exportname = /dev/disk/by-partuuid/468b72fc-7433-6041-9f17-72f61c914f9f
-authfile = /etc/nbd-server/allow
 ```
-/etc/nbd-server/allow
+
+- Create this file that is referred to in the above config /etc/nbd-server/allow
 ```
 127.0.0.1
 192.168.1.1
 192.168.0.0/16
 ```
-Get the nbd-server daemon running!
+- Now get the nbd-server daemon running!
+```
 sudo systemctl enable nbd-server
 Sudo systemctl start nbd-server
 Sudo systemctl status nbd-server
@@ -202,8 +210,16 @@ ztar2
 ztar3
 ztar4
 
-CLONE https://github.com/gpwclark/ragnar.sh
-Add the RAGNAR_SERVER env var to some host in your ~/.ssh/config
+### RAGNAR Now get the ragnar script running
+
+```
+cd ragnar
+```
+Follow ragnar README (set RAGNAR_SERVER=ztar  in env and put the keyfile at /etc/luks/ztar.key)
+
+### having a host machine "always" mount the zpool
+
+1. Add the RAGNAR_SERVER env var to some host in your ~/.ssh/config
 Set RAGNAR_NBDEXPORT=”ztar” or whatever your zpool name is
 Set the RAGNAR_KEYFILE /etc/luks/${RAGNAR_NBDEXPORT}.key
 To write the keyfile properly before you type the binary type

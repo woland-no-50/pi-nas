@@ -12,7 +12,7 @@
       }
     },
     "vars": {
-      "RAGNAR_SERVER": "ztar"
+      "RAGNAR_SERVER": "zigloo"
     },
     "hook": {},
     "profile": {},

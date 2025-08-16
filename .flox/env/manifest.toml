@@ -26,7 +26,7 @@ udisks.systems = ["aarch64-linux", "x86_64-linux"]
 ##      as well as [hook], [profile] scripts and [services] below.
 ## -------------------------------------------------------------------
 [vars]
-RAGNAR_SERVER = "ztar"
+RAGNAR_SERVER = "zigloo"
 
 
 ## Activation Hook ---------------------------------------------------

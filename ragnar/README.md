@@ -1,3 +1,8 @@
+#hard forked from 
+https://github.com/gavinhungry/rangar
+and
+https://github.com/gavinhungry/abash
+
 [ragnar](http://en.battlestarwiki.org/wiki/Ragnar_Anchorage)
 ========
 Mount an existing remote [LUKS](https://gitlab.com/cryptsetup/cryptsetup) device
