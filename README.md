@@ -1,9 +1,12 @@
 # Motivation
-Need debian setup with network block devices working!
 
-NBD & luks = remote encrypted backups... e.g. we each have a luks encrypted setup at the other's house, and then we use this linux Network Block Device technology (https://packages.debian.org/stable/nbd-server) to mount the luks volumes, but then we use cryptsetup open on the locally block device which is then decrypted... locally. Therefore the “host” of the nbd server couldn’t ever access any of the files on it, zero-trust!
+Using LUKS, NBD, ZFS, and a VPN, create a pi5 nas device capable of hosting LUKS drives,
+then use another (remote) machine to decrypt those nbd-hosted luks drives and use them in a zpool.
+This allows for a "zero-trust" solution where the physical host of the pi nas device has no
+access to any of the data on the nas server, even when all encrypted drives are hosted by the nbd
+server and it's running as a zpool decypted on the nbd client; because it's always encrypted by luks.
 
-Poc from: https://github.com/gavinhungry/ragnar + some zfs
+poc from: https://github.com/gavinhungry/ragnar + some zfs
 
 # Parts
 Sd card for pi - https://www.amazon.com/dp/B09X7DQJQL?ref=ppx_yo2ov_dt_b_fed_asin_title
@@ -20,8 +23,8 @@ https://www.amazon.com/dp/B0BV5JZZVB?ref=ppx_yo2ov_dt_b_fed_asin_title
 Sky is the limit here but something that holds hdd
 The pi
 https://www.amazon.com/dp/B0F1CT9SQ6?ref=ppx_yo2ov_dt_b_fed_asin_title
-Sata hat for the pi
- https://www.amazon.com/dp/B0DX1HQWB2?ref=ppx_yo2ov_dt_b_fed_asin_title
+radxa Sata hat for the pi
+https://www.amazon.com/dp/B0DX1HQWB2?ref=ppx_yo2ov_dt_b_fed_asin_title
 Cooler for pi
 https://www.amazon.com/dp/B0CRR97QGL?ref=ppx_yo2ov_dt_b_fed_asin_title
 
@@ -35,7 +38,7 @@ https://github.com/louislam/uptime-kuma
 
 ## Steps manually performed in the physical world.
 ### Assembly!
-- you're on your own here!
+- you're on your own here! Connect all the bits and bobs when in doubt trust Jeff Geerling: https://www.youtube.com/watch?v=l30sADfDiM8
 - 3D print pi tray to so it can be screwed in to the tower?
 
 

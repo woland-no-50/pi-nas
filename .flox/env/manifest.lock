@@ -3,6 +3,19 @@
   "manifest": {
     "version": 1,
     "install": {
+      "cryptsetup": {
+        "pkg-path": "cryptsetup",
+        "systems": [
+          "aarch64-linux",
+          "x86_64-linux"
+        ]
+      },
+      "nbd": {
+        "pkg-path": "nbd"
+      },
+      "pv": {
+        "pkg-path": "pv"
+      },
       "udisks": {
         "pkg-path": "udisks",
         "systems": [
@@ -19,6 +32,306 @@
     "options": {}
   },
   "packages": [
+    {
+      "attr_path": "cryptsetup",
+      "broken": false,
+      "derivation": "/nix/store/b7mf75hxcpz8zl169sx4cz4qld1hdxv2-cryptsetup-2.8.0.drv",
+      "description": "LUKS for dm-crypt",
+      "install_id": "cryptsetup",
+      "license": "GPL-2.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "cryptsetup-2.8.0",
+      "pname": "cryptsetup",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T00:49:14.850251Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.8.0",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/xnkiv0z6idx3x2vhs1cikvln3kwvg0bv-cryptsetup-2.8.0-bin",
+        "debug": "/nix/store/71j4gwhiq50ilkcr0g8957p42dl3zaah-cryptsetup-2.8.0-debug",
+        "dev": "/nix/store/xsvxf4kgmqwc9qnk7filzhvxh9ikz11v-cryptsetup-2.8.0-dev",
+        "man": "/nix/store/771m6xfr2yihv3cylj8y0l7c0c8rchxj-cryptsetup-2.8.0-man",
+        "out": "/nix/store/xb9rwi93shj24igsnsa4y50ii3mn4q2d-cryptsetup-2.8.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "cryptsetup",
+      "broken": false,
+      "derivation": "/nix/store/pjafn3dksvs6jgx0pkb6jcn5p28w78d0-cryptsetup-2.8.0.drv",
+      "description": "LUKS for dm-crypt",
+      "install_id": "cryptsetup",
+      "license": "GPL-2.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "cryptsetup-2.8.0",
+      "pname": "cryptsetup",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T01:32:57.658600Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "2.8.0",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/2jsnlcxi8s358d6sarsxqvaq2nrdbdz0-cryptsetup-2.8.0-bin",
+        "debug": "/nix/store/f9xbab60zjnkk5b20mzsbh02xyxcq801-cryptsetup-2.8.0-debug",
+        "dev": "/nix/store/zjmyi595j55hjh94rw201m1ix4rg9pga-cryptsetup-2.8.0-dev",
+        "man": "/nix/store/kj97kdnf82wmciihhqgcvz67y2my0zpd-cryptsetup-2.8.0-man",
+        "out": "/nix/store/rkc22hjrki8m2xk24iy7rd043v2ks6a2-cryptsetup-2.8.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nbd",
+      "broken": false,
+      "derivation": "/nix/store/qcn3mnbdxmbf2nv8msa3bilzjcflmdpd-nbd-3.25.drv",
+      "description": "Map arbitrary files as block devices over the network",
+      "install_id": "nbd",
+      "license": "GPL-2.0-only",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "nbd-3.25",
+      "pname": "nbd",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T00:29:23.755029Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/00rkxzjwpyrly9j5jdc5jfjr414fww19-nbd-3.25"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nbd",
+      "broken": false,
+      "derivation": "/nix/store/2c47bddhz5vsj52qwymyxksn86w2qq15-nbd-3.25.drv",
+      "description": "Map arbitrary files as block devices over the network",
+      "install_id": "nbd",
+      "license": "GPL-2.0-only",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "nbd-3.25",
+      "pname": "nbd",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T00:49:24.667973Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/pjbyklm4sp0hh1q7qpsfl44w8d4bp3kr-nbd-3.25"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nbd",
+      "broken": false,
+      "derivation": "/nix/store/hwn4z1cm6xhgxvmj2vaihl6x0si2jqxs-nbd-3.25.drv",
+      "description": "Map arbitrary files as block devices over the network",
+      "install_id": "nbd",
+      "license": "GPL-2.0-only",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "nbd-3.25",
+      "pname": "nbd",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T01:08:51.975628Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/kda5dcjgma2v51ar804hf9b58bp8kjcs-nbd-3.25"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nbd",
+      "broken": false,
+      "derivation": "/nix/store/2x2yy8y7n9lypfmjlzzg3rap1y03qy6c-nbd-3.25.drv",
+      "description": "Map arbitrary files as block devices over the network",
+      "install_id": "nbd",
+      "license": "GPL-2.0-only",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "nbd-3.25",
+      "pname": "nbd",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T01:33:09.316086Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.25",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/chhj65j79nswwj032q0wb9byx55ziidd-nbd-3.25"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pv",
+      "broken": false,
+      "derivation": "/nix/store/hnxpzc4657dz26sjn4la8v86p10dkcc9-pv-1.9.34.drv",
+      "description": "Tool for monitoring the progress of data through a pipeline",
+      "install_id": "pv",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "pv-1.9.34",
+      "pname": "pv",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T00:29:30.078653Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.9.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/45r6h34k6n75010cnqca23bzqssyks1n-pv-1.9.34"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pv",
+      "broken": false,
+      "derivation": "/nix/store/npiwmyxr07cmfd6rcqr48b7d271zrsgv-pv-1.9.34.drv",
+      "description": "Tool for monitoring the progress of data through a pipeline",
+      "install_id": "pv",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "pv-1.9.34",
+      "pname": "pv",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T00:49:37.079594Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.9.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/l4gam210am6w01z5z4wlsfxq5li15b9y-pv-1.9.34"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pv",
+      "broken": false,
+      "derivation": "/nix/store/4arfpc9zsany5vlv8bm72dn0qx0vbalf-pv-1.9.34.drv",
+      "description": "Tool for monitoring the progress of data through a pipeline",
+      "install_id": "pv",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "pv-1.9.34",
+      "pname": "pv",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T01:08:58.341483Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.9.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/lf2d7y2w7m0yqyzafcjms9zk1zlnha50-pv-1.9.34"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pv",
+      "broken": false,
+      "derivation": "/nix/store/xb5k85ri0smrrw0x414isq214hss9z8y-pv-1.9.34.drv",
+      "description": "Tool for monitoring the progress of data through a pipeline",
+      "install_id": "pv",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "name": "pv-1.9.34",
+      "pname": "pv",
+      "rev": "5b09dc45f24cf32316283e62aec81ffee3c3e376",
+      "rev_count": 838708,
+      "rev_date": "2025-08-03T09:47:33Z",
+      "scrape_date": "2025-08-05T01:33:21.949749Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.9.34",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/jq8r0akyb39a27628wwdxdsr65gyh8h0-pv-1.9.34"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
     {
       "attr_path": "udisks",
       "broken": false,

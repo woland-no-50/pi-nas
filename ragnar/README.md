@@ -14,20 +14,30 @@ You must have an existing LUKS device with a keyfile being exported by NBD on
 some remote server. Your NBD server should be behind a firewall, and only listen
 on `localhost`.
 
-MODIFICATIONS:
+REQUIREMENTS:
     - The name of your zpool and the name of the alias (in .ssh/config) to your remote server that is
-    hosting your encrypted drives must be the same. 
-    - set that value to RAGNAR_SERVER=
+    hosting your encrypted drives must be the same.
+    - set that value = RAGNAR_SERVER
     e.g. export RAGNAR_SERVER=zigloo or RAGNAR_SERVER=ztar
+    - set RAGNAR_KEYFILE if it is not equal to /etc/luks/${RAGNAR_SERVER}.key
+    - set RAGNAR_NUM_DRIVES if it not equal to 5
+
+    *NOTE
+    	The observant reader following along from the pi-nas root
+    README.md will note that the zpool, ztar, and the hosted nas drives
+    with nbd-server, ztar0-ztar4, have a ztar# style naming pattern,
+    this is relied on in the ragnar script to mount each individual luks
+    drive before mounting the zpool. It is only because /dev/maapper/ztar0-4
+    exist in the correct order (the same as when they are encrypted) that allows
+    the zpool import command to work.
 
 Environment Variables
 ---------------------
   - `RAGNAR_SERVER`: Server to connect to (can be a host alias from
-    `~/.ssh/config`). Defaults to `ragnar`.
-  - `RAGNAR_NBDEXPORT`: Name of remote NBD export (see remote
-    `/etc/nbd-server/config`). Defaults to `ragnar`.
+    `~/.ssh/config`). Defaults to `ztar`.
   - `RAGNAR_KEYFILE`: Path to LUKS keyfile. Defaults to
     `/etc/luks/${RAGNAR_NBDEXPORT}.key`
+  - RAGNAR_NUM_DRIVES: number of drives to mount, defaults to 5.jk:w
 
 Usage
 -----

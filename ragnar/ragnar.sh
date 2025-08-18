@@ -11,32 +11,36 @@
 
 if [[ ! -z ${DEBUG} ]]; then
   set -x
+  set -e
 fi
 
 [ ${_ABASH:-0} -ne 0 ] || source $(dirname "${BASH_SOURCE}")/abash/abash.sh
 
-SERVER=${RAGNAR_SERVER:-ztar}
-echo "SERVE $SERVER"
-NBDEXPORT=${RAGNAR_NBDEXPORT:-$RAGNAR_SERVER}
+SERVER=${RAGNAR_SERVER:-zigloo}
+echo "SERVER $SERVER"
+NBDEXPORT=${RAGNAR_NBDEXPORT:-$SERVER}
+ZPOOL=${ZPOOL:-$SERVER}
 KEYFILE=${RAGNAR_KEYFILE:-/etc/luks/${NBDEXPORT}.key}
 echo "keyfile $KEYFILE"
 HEADER=${RAGNAR_HEADER:-/etc/luks/${NBDEXPORT}.header}
+NUM_DRIVES=${RAGNAR_NUM_DRIVES:-"5"}
 
 TMP=$(tmpdirp "${SERVER}-${NBDEXPORT}")
 mkdir -p ${TMP}
+SERVER_IP=$(ssh -G ${SERVER} | grep -i "^hostname " | cut -d " " -f 2)
 
 # use TMP dir for ctl_path
 ssh_is_open() {
-  ssh -qO check -S "${TMP}/ssh" ${SERVER} &> /dev/null
+  ssh -qO check -S "${TMP}/ssh" ${SERVER_IP} &> /dev/null
 }
 
 open_ssh() {
-  ssh -fNn -MS "${TMP}/ssh" -L 10809:127.0.0.1:10809 ${SERVER}
+  ssh -fNn -MS "${TMP}/ssh" -L 10809:127.0.0.1:10809 ${SERVER_IP}
 }
 
 close_ssh() {
   if ssh_is_open; then
-    ssh -qO exit -S "${TMP}/ssh" ${SERVER}
+    ssh -qO exit -S "${TMP}/ssh" ${SERVER_IP}
   fi
 }
 
@@ -49,10 +53,11 @@ nbd_is_open() {
   [ -f "/sys/block/${1}/pid" ] && nbd-client -c "/dev/${1}" &>/dev/null && [ "$(sudo blockdev --getsize64 "/dev/${1}" 2>/dev/null)" -gt 0 ]
 }
 
+# TODO this isn't actually working :(
 wait_for_nbd() {
     local device=$(nbd_device $1)
-    local timeout=${2:-10}  # Default 10 seconds
-    local max_iterations=$((timeout * 10))  # Convert to 0.1s iterations
+    local timeout=${2:-10}  # Default 2 seconds
+    local max_iterations=$((timeout * 2))  # Convert to 0.1s iterations
     local iterations=0
     echo "waiting for nbd device: ${device}"
 
@@ -139,52 +144,72 @@ luks_close() {
 }
 
 open() {
-  # TODO HARDCODED
-  for i in {0..4}; do
+  if sudo zpool list -H -o name ${ZPOOL} 2>&1; then
+      inform "Already mounted zpool ${ZPOOL}."
+      return 0;
+  fi
+
+  for i in $(seq 0 $((NUM_DRIVES - 1))); do
     checksu [ -f "${KEYFILE}" ] || die "Keyfile not found"
+    for j in $(seq 0 10); do
+        if [[ ${j} = 10 ]]; then
+            CMD=die
+        else
+            CMD=warn
+        fi
 
-    if ssh_is_open; then
-      inform "SSH connection already open to ${SERVER}"
-    else
-      open_ssh
-      inform "Opening SSH connection to ${SERVER}" || die "Could not open SSH connection to ${SERVER}"
-    fi
+        if ssh_is_open; then
+          inform "SSH connection already open to ${SERVER}"
+        else
+          open_ssh
+          inform "Opening SSH connection to ${SERVER}" || ${CMD} "Could not open SSH connection to ${SERVER}"
+        fi
 
-    NBD=$(nbd_next_open ${i})
-    if [[ -n "$(nbd_device ${i})" ]]; then
-      inform "**${NBDEXPORT}${i} already open on $(nbd_device ${i})**"
-    else
-      inform "Opening network block device on /dev/${NBD}"
-      open_export ${NBD} ${i} || die "Could not open network block device on /dev/${NBD}"
-    fi
+        NBD=$(nbd_next_open ${i})
+        NBD_DEVICE=$(nbd_device ${i})
+        if [[ "$(nbd_is_open ${NBD_DEVICE})" ]]; then
+          inform "**${NBDEXPORT}${i} already open on $(nbd_device ${i})**"
+        else
+          inform "Opening network block device on /dev/${NBD}"
+          open_export ${NBD} ${i} || ${CMD} "Could not open network block device on /dev/${NBD}"
+        fi
 
-    wait_for_nbd ${i} 10 || die "Nbd device on /dev/${NBD} never came up!"
+        wait_for_nbd ${i} 10 || ${CMD} "Nbd device on /dev/${NBD} never came up!"
 
-    if luks_is_open ${i}; then
-      inform "**${NBDEXPORT}${i} already decrypted on ${NBDEXPORT}${i}**"
-    else
-      inform "Opening LUKS device from /dev/${NBD}"
-      luks_open ${NBD} ${i} || die "Could not open LUKS device from /dev/${NBD}"
-      inform "Decrypted filesystem from /dev/mapper/${NBDEXPORT}${i}"
-    fi
+        if luks_is_open ${i}; then
+          warn "HICCUP"
+          warn "HICCUP"
+          inform "Decrypted **${NBDEXPORT}${i} previously to /dev/mapper/${NBDEXPORT}${i}"
+          break
+        else
+          inform "Opening LUKS device from /dev/${NBD}"
+          if luks_open ${NBD} ${i}; then
+              inform "Decrypted filesystem from /dev/mapper/${NBDEXPORT}${i}"
+              break
+          else
+              ${CMD} "Could not open LUKS device from /dev/${NBD}"
+              echo "Retry after iteration: ${j}"
+              continue
+          fi
+        fi
+    done
   done
 
-  if sudo zpool list -H -o name ${NBDEXPORT} 2>&1; then
-      inform "Already mounted zpool ${NBDEXPORT}."
+  if sudo zpool list -H -o name ${ZPOOL} 2>&1; then
+      inform "Already mounted zpool ${ZPOOL}."
   else
     inform "${NBDEXPORT} is not imported, importing now..."
-    if sudo zpool import -f ${NBDEXPORT}; then
-      inform "Mounted zpool ${NBDEXPORT}"
+    if sudo zpool import -f ${ZPOOL}; then
+      inform "Mounted zpool ${ZPOOL}"
     else
-      die "Failed to mount zpool ${NBDEXPORT}"
+      die "Failed to mount zpool ${ZPOOL}"
     fi
   fi
 }
 
 close() {
-  checksu zpool export ${NBDEXPORT}
-  # TODO HARDCODED
-  for i in {0..4}; do
+  eval checksu zpool export -f ${ZPOOL}
+  for i in $(seq 0 $((NUM_DRIVES - 1))); do
     if [[ -n "$(export_is_open ${i})" ]]; then
       inform "${NBDEXPORT}${i} is not open"
       continue # skip
@@ -217,6 +242,7 @@ if ssh_host_exists "${RAGNAR_SERVER}"; then
     case $1 in
       'open') open ;;
       'close') close ;;
+      'restart') close && open ;;
       *) usage '[open|close]' ;;
     esac
 else

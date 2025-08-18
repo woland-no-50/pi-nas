@@ -15,11 +15,12 @@ version = 1
 ##  $ flox show gum     <- show all versions of a package
 ## -------------------------------------------------------------------
 [install]
-# gum.pkg-path = "gum"
-# gum.version = "^0.14.5"
 udisks.pkg-path = "udisks"
 udisks.systems = ["aarch64-linux", "x86_64-linux"]
-
+nbd.pkg-path = "nbd"
+cryptsetup.pkg-path = "cryptsetup"
+cryptsetup.systems = ["aarch64-linux", "x86_64-linux"]
+pv.pkg-path = "pv"
 
 ## Environment Variables ---------------------------------------------
 ##  ... available for use in the activated environment

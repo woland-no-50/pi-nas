@@ -276,9 +276,11 @@ usage() {
     echo " 2. ./test.sh unmount"
     echo " 3. ./test.sh start-nbd"
     echo " 4. ./test.sh create"
-    echo " 5. RAGNAR_SERVER=test RAGNAR_KEYFILE=/tmp/zfs-test/test.key ./ragnar.sh open"
+    echo " 5. On a different computer:
+    echo " 	RAGNAR_SERVER=test RAGNAR_KEYFILE=/tmp/zfs-test/test.key ./ragnar.sh open"
     echo " 6. test!"
-    echo " 7. RAGNAR_SERVER=test RAGNAR_KEYFILE=/tmp/zfs-test/test.key ./ragnar.sh close"
+    echo " 7. On a different computer:
+    echo " 	RAGNAR_SERVER=test RAGNAR_KEYFILE=/tmp/zfs-test/test.key ./ragnar.sh close"
     echo " 8. ./test.sh stop-nbd"
     echo " 9. ./test.sh mount"
     echo " 10. inspect!"
