@@ -199,6 +199,9 @@ exportname = /dev/disk/by-partuuid/468b72fc-7433-6041-9f17-72f61c914f9f
 ```
 
 - Create this file that is referred to in the above config /etc/nbd-server/allow
+but use ips from the interfaces you find in the output of `ip addr show` don't
+do something like binding it to 0.0.0.0 or a wan ip unless you really think
+that you have nothing to worry about.
 ```
 127.0.0.1
 192.168.1.1
@@ -227,25 +230,25 @@ Follow ragnar README (set RAGNAR_SERVER=ztar  in env and put the keyfile at /etc
 
 NOTE: You must be able to successfully run `./ragnar.sh open` and `./ragnar.sh close`
 
+
+### you did it!
+You have a sort of cool system that you can manually use ./ragnar.sh open and ./ragnar.sh close on
+to interact with your remote zpool. However, you're busy, and want this ALL automated. So, let's
+see what it takes to get this pool:
+1. auto mounting
+2. auto scrubbing
+3. auto backing up
+4. with notifications from zed if something goes wrong.
+
+
+## ZFS and systemd
+
 save the direct path to the ragnar script, e.g. `~/development/pi-nas/ragnar/ragnar.sh`
 
-### having a host machine "always" mount the zpool
+### Auto-mounting
 
-1. Add the RAGNAR_SERVER env var to some host in your ~/.ssh/config
-Set RAGNAR_NBDEXPORT=”ztar” or whatever your zpool name is
-Set the RAGNAR_KEYFILE /etc/luks/${RAGNAR_NBDEXPORT}.key
-To write the keyfile properly before you type the binary type
-	:set binary <hit enter>
-	:set noeol <hit enter>
-This will allow you to write exactly what you typed with no newline saved at the end of the file
-Having a service that allows mounts your devices
-Verify that there is a zfs-import of some kind on your system:
-```
-> systemctl list-unit-files | grep zfs-import
-zfs-import-cache.service                    enabled         enabled
-zfs-import-scan.service                     disabled        disabled
-zfs-import.service                          masked          disabled
-zfs-import.target                           enabled         enabled
-```
-My system has the zfs-import target enabled (don’t worry about the service being masked).
+#### Knowing when to auto mount
+- If only we could "just mount it". first we are going to create some systemd services that will give us a
+"target" 
+
 

@@ -17,9 +17,19 @@ on `localhost`.
 REQUIREMENTS:
     - The name of your zpool and the name of the alias (in .ssh/config) to your remote server that is
     hosting your encrypted drives must be the same.
-    - set that value = RAGNAR_SERVER
+    e.g.: ~/.ssh/config
+    ```
+    Host ztar
+        Hostname 192.168.1.155
+    ```
     e.g. export RAGNAR_SERVER=zigloo or RAGNAR_SERVER=ztar
     - set RAGNAR_KEYFILE if it is not equal to /etc/luks/${RAGNAR_SERVER}.key
+        - To write the keyfile properly before you type the password
+            1. :set binary <hit enter>
+            2. :set noeol <hit enter>
+            3. input your password
+            4. save and exit vim
+        This will allow you to write exactly what you typed with no newline saved at the end of the file
     - set RAGNAR_NUM_DRIVES if it not equal to 5
 
     *NOTE
